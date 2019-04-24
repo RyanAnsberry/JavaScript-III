@@ -35,7 +35,6 @@ function CharacterStats(charAttr) {
   this.healthPoints = charAttr.healthPoints;
   GameObject.call(this, charAttr);
 }
-
 CharacterStats.prototype = Object.create(GameObject.prototype);
 
 CharacterStats.prototype.takeDamage = function() {
@@ -57,7 +56,6 @@ function Humanoid(humAttr) {
   this.language = humAttr.language;
   CharacterStats.call(this, humAttr);
 }
-Humanoid.prototype = Object.create(GameObject.prototype);
 Humanoid.prototype = Object.create(CharacterStats.prototype);
 
 Humanoid.prototype.greet = function () {
@@ -141,3 +139,69 @@ Humanoid.prototype.greet = function () {
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+  function Villain(vilAttr) {
+    Humanoid.call(this, vilAttr);
+  }
+  Villain.prototype = Object.create(Humanoid.prototype);
+
+  Villain.prototype.strike = function(target) {
+    target.healthPoints = target.healthPoints - 4;
+    if (target.healthPoints <= 0) {
+      return target.destroy();
+    }else{
+      return target.takeDamage();
+    }
+  }
+
+  function Hero(heroAttr) {
+    Humanoid.call(this, heroAttr);
+  }
+  Hero.prototype = Object.create(Humanoid.prototype);
+
+  Hero.prototype.strike = function(target) {
+    target.healthPoints = target.healthPoints - 4;
+    if (target.healthPoints <= 0) {
+      return target.destroy();
+    }else{
+      return target.takeDamage();
+    }
+  }
+
+  const skeleton = new Villain({
+    createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 4,
+    },
+    healthPoints: 10,
+    name: 'Skeleton',
+    team: 'Undead',
+    weapons: [
+      'Sword'
+    ],
+    language: 'Unknown',
+  })
+
+  const jason = new Hero({
+    createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 3,
+    },
+    healthPoints: 15,
+    name: 'Jason',
+    team: 'Argonaut',
+    weapons: [
+      'Sword',
+      'Shield',
+    ],
+    language: 'Greek',
+  })
+
+  console.log(jason.strike(skeleton));
+  console.log(skeleton.strike(jason));
+  console.log(jason.strike(skeleton));
+  console.log(skeleton.strike(jason));
+  console.log(jason.strike(skeleton));
